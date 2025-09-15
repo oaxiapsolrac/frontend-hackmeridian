@@ -1,3 +1,4 @@
+import ConnectButton from '@/components/ConnectButton'
 export default function Home() {
   return (
     <main className="relative min-h-screen text-white w-full">
@@ -17,9 +18,10 @@ export default function Home() {
         <p className="mt-4 text-xl text-gray-300 mb-8">
           The digital home for the world's most discerning yacht owners. Connect your wallet to access the private community.
         </p>
-        <button className="inline-flex items-center rounded-md bg-white text-black px-6 py-3 font-medium hover:bg-gray-200 transition">
-          Connect Wallet
-        </button>
+        <div>
+          {/* Reusable connect button */}
+          <ConnectButton />
+        </div>
       </div>
     </main>
   )

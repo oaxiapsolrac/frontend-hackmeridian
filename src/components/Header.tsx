@@ -2,6 +2,7 @@
 
 import { Button } from './ui/button'
 import { useWallet } from '@/lib/WalletProvider'
+import ConnectButton from '@/components/ConnectButton'
 
 export default function Header() {
   const { isConnected, publicKey, connect, disconnect, isLoading } = useWallet()
@@ -28,21 +29,10 @@ export default function Header() {
               <div className="text-sm text-gray-300">
                 <span className="text-green-400">●</span> {formatAddress(publicKey)}
               </div>
-              <Button 
-                onClick={disconnect}
-                className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-lg transition-colors duration-200"
-              >
-                Disconnect
-              </Button>
+              <ConnectButton className="px-4 py-2" />
             </div>
           ) : (
-            <Button 
-              onClick={connect}
-              disabled={isLoading}
-              className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-semibold px-6 py-2 rounded-lg transition-colors duration-200"
-            >
-              {isLoading ? 'Connecting...' : 'Connect Wallet'}
-            </Button>
+            <ConnectButton />
           )}
         </div>
       </div>
