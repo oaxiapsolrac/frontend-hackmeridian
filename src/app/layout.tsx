@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/Header'
 import { WalletProvider } from '@/lib/WalletProvider'
+import { AuthProvider } from '@/context/AuthContext'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,12 +20,14 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${inter.className} bg-slate-900`}>
-        <WalletProvider>
-          <Header />
-          <main className="pt-20">
-            {children}
-          </main>
-        </WalletProvider>
+        <AuthProvider>
+          <WalletProvider>
+            <Header />
+            <main className="pt-20">
+              {children}
+            </main>
+          </WalletProvider>
+        </AuthProvider>
       </body>
     </html>
   )

@@ -4,9 +4,11 @@ import { Button } from './ui/button'
 import { useWallet } from '@/lib/WalletProvider'
 import ConnectButton from '@/components/ConnectButton'
 import Link from 'next/link'
+import { useAuth } from '@/context/AuthContext'
 
 export default function Header() {
   const { isConnected, publicKey, connect, disconnect, isLoading } = useWallet()
+  const { isAuthenticated, logout } = useAuth()
 
   const formatAddress = (address: string) => {
     if (address.length <= 12) return address
@@ -23,23 +25,26 @@ export default function Header() {
           </h1>
         </div>
 
-        {/* Wallet Connection */}
-        <div className="flex items-center space-x-4">
-          <nav>
-            <Link href="/(vip)/dashboard" className="text-sm text-white/90 hover:text-white transition">
-              Dashboard
-            </Link>
-          </nav>
-          {isConnected && publicKey ? (
-            <div className="flex items-center space-x-3">
-              <div className="text-sm text-gray-300">
-                <span className="text-green-400">●</span> {formatAddress(publicKey)}
-              </div>
-              <ConnectButton className="px-4 py-2" />
-            </div>
-          ) : (
-            <ConnectButton />
-          )}
+        {/* Navigation and Auth */}
+        {isAuthenticated ? (
+          <div className="flex items-center space-x-4">
+            <nav className="flex items-center space-x-4">
+              <Link href="/dashboard" className="text-sm text-white/90 hover:text-white transition">
+                Dashboard
+              </Link>
+              <Link href="/admin" className="text-sm text-white/90 hover:text-white transition">
+                Admin
+              </Link>
+            </nav>
+            <Button 
+              onClick={logout} 
+              variant="outline" 
+              className="text-sm border-white/20 text-white hover:bg-white/10"
+            >
+              Logout
+            </Button>
+          </div>
+        ) : null}
         </div>
       </div>
     </header>
