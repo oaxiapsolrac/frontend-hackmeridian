@@ -2,33 +2,142 @@
 
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { useWallet } from '@/lib/WalletProvider'
+import { issueMembership, issueBadge, TransactionStatus } from '@/lib/soroban'
+import TransactionStatusComponent from '@/components/TransactionStatus'
 
 export default function Admin() {
+  const { isConnected, publicKey } = useWallet()
+  
   const [membershipForm, setMembershipForm] = useState({
     walletAddress: ''
   })
 
   const [badgeForm, setBadgeForm] = useState({
     walletAddress: '',
-    badgeId: ''
+    badgeId: '',
+    badgeName: '',
+    badgeDescription: ''
   })
 
-  const handleMembershipSubmit = (e: React.FormEvent) => {
+  const [membershipStatus, setMembershipStatus] = useState<TransactionStatus | null>(null)
+  const [badgeStatus, setBadgeStatus] = useState<TransactionStatus | null>(null)
+  const [isProcessingMembership, setIsProcessingMembership] = useState(false)
+  const [isProcessingBadge, setIsProcessingBadge] = useState(false)
+
+  const handleMembershipSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Issue Membership:', membershipForm)
-    // TODO: Implement membership issuance logic
+    
+    if (!isConnected || !publicKey) {
+      alert('Por favor, conecte sua carteira primeiro')
+      return
+    }
+
+    if (!membershipForm.walletAddress.trim()) {
+      alert('Por favor, insira um endereço de carteira válido')
+      return
+    }
+
+    setIsProcessingMembership(true)
+    setMembershipStatus({
+      status: 'pending',
+      message: 'Processando emissão de membership...'
+    })
+
+    try {
+      const result = await issueMembership(membershipForm.walletAddress, publicKey)
+      setMembershipStatus(result)
+      
+      if (result.status === 'success') {
+        setMembershipForm({ walletAddress: '' })
+      }
+    } catch (error) {
+      setMembershipStatus({
+        status: 'error',
+        message: 'Erro inesperado ao processar transação',
+        error: error instanceof Error ? error.message : 'Erro desconhecido'
+      })
+    } finally {
+      setIsProcessingMembership(false)
+    }
   }
 
-  const handleBadgeSubmit = (e: React.FormEvent) => {
+  const handleBadgeSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Award Badge:', badgeForm)
-    // TODO: Implement badge awarding logic
+    
+    if (!isConnected || !publicKey) {
+      alert('Por favor, conecte sua carteira primeiro')
+      return
+    }
+
+    if (!badgeForm.walletAddress.trim() || !badgeForm.badgeId.trim()) {
+      alert('Por favor, preencha todos os campos obrigatórios')
+      return
+    }
+
+    setIsProcessingBadge(true)
+    setBadgeStatus({
+      status: 'pending',
+      message: 'Processando emissão de badge...'
+    })
+
+    try {
+      const result = await issueBadge(
+        badgeForm.walletAddress,
+        badgeForm.badgeId,
+        badgeForm.badgeName || `Badge ${badgeForm.badgeId}`,
+        badgeForm.badgeDescription || `Achievement badge ${badgeForm.badgeId}`,
+        publicKey
+      )
+      setBadgeStatus(result)
+      
+      if (result.status === 'success') {
+        setBadgeForm({ 
+          walletAddress: '', 
+          badgeId: '', 
+          badgeName: '', 
+          badgeDescription: '' 
+        })
+      }
+    } catch (error) {
+      setBadgeStatus({
+        status: 'error',
+        message: 'Erro inesperado ao processar transação',
+        error: error instanceof Error ? error.message : 'Erro desconhecido'
+      })
+    } finally {
+      setIsProcessingBadge(false)
+    }
   }
 
   return (
     <div className="min-h-screen bg-slate-900 text-white p-8">
       <div className="max-w-4xl mx-auto space-y-12">
         
+        {/* Status Notifications */}
+        {membershipStatus && (
+          <TransactionStatusComponent 
+            status={membershipStatus} 
+            onClose={() => setMembershipStatus(null)}
+          />
+        )}
+        
+        {badgeStatus && (
+          <TransactionStatusComponent 
+            status={badgeStatus} 
+            onClose={() => setBadgeStatus(null)}
+          />
+        )}
+
+        {/* Connection Status */}
+        {!isConnected && (
+          <div className="bg-yellow-900 border border-yellow-600 rounded-lg p-4">
+            <p className="text-yellow-200">
+              ⚠️ Você precisa conectar sua carteira para emitir memberships e badges
+            </p>
+          </div>
+        )}
+
         {/* Issue New Membership Form */}
         <section className="space-y-6">
           <h1 className="text-4xl font-bold text-white mb-8">
@@ -48,14 +157,16 @@ export default function Admin() {
                 placeholder="Enter wallet address..."
                 className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 required
+                disabled={isProcessingMembership}
               />
             </div>
             
             <Button 
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200"
+              disabled={isProcessingMembership || !isConnected}
+              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200"
             >
-              Issue Membership
+              {isProcessingMembership ? 'Processing...' : 'Issue Membership'}
             </Button>
           </form>
         </section>
@@ -79,6 +190,7 @@ export default function Admin() {
                 placeholder="Enter wallet address..."
                 className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 required
+                disabled={isProcessingBadge}
               />
             </div>
             
@@ -94,14 +206,46 @@ export default function Admin() {
                 placeholder="Enter badge ID..."
                 className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 required
+                disabled={isProcessingBadge}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="badge-name" className="block text-sm font-medium text-gray-300">
+                Badge Name (Optional)
+              </label>
+              <input
+                type="text"
+                id="badge-name"
+                value={badgeForm.badgeName}
+                onChange={(e) => setBadgeForm({ ...badgeForm, badgeName: e.target.value })}
+                placeholder="Enter badge name..."
+                className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                disabled={isProcessingBadge}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="badge-description" className="block text-sm font-medium text-gray-300">
+                Badge Description (Optional)
+              </label>
+              <textarea
+                id="badge-description"
+                value={badgeForm.badgeDescription}
+                onChange={(e) => setBadgeForm({ ...badgeForm, badgeDescription: e.target.value })}
+                placeholder="Enter badge description..."
+                rows={3}
+                className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                disabled={isProcessingBadge}
               />
             </div>
             
             <Button 
               type="submit"
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200"
+              disabled={isProcessingBadge || !isConnected}
+              className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200"
             >
-              Award Badge
+              {isProcessingBadge ? 'Processing...' : 'Award Badge'}
             </Button>
           </form>
         </section>
