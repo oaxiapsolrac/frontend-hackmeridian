@@ -1,72 +1,72 @@
-# Capys Club - Plataforma de Comunidades VIP na Rede Stellar
+# Capys Club - A Tokenized VIP Platform on the Stellar Network
 
 ![Capys Club Banner](https://via.placeholder.com/1200x400.png?text=Capys+Club+-+Powered+by+Stellar)
 
-### Uma plataforma de engajamento de alta performance que permite a marcas de luxo criar e gerenciar comunidades exclusivas através de ativos digitais na blockchain Stellar, conectando-se diretamente com seus clientes mais valiosos.
+### A high-performance engagement platform that enables luxury brands to create and manage exclusive communities through digital assets on the Stellar blockchain, connecting directly with their most valued clients.
 
-[![Status](https://img.shields.io/badge/status-em--desenvolvimento-yellow?style=for-the-badge)](https://github.com/oaxiacpsolrac/frontend-hackmeridian) [![Blockchain](https://img.shields.io/badge/blockchain-Stellar-blueviolet?style=for-the-badge)](https://stellar.org/)
+[![Status](https://img.shields.io/badge/status-in--development-yellow?style=for-the-badge)](https://github.com/oaxiacpsolrac/frontend-hackmeridian) [![Blockchain](https://img.shields.io/badge/blockchain-Stellar-blueviolet?style=for-the-badge)](https://stellar.org/)
 
 ---
 
-## 🚀 O Problema
+## 🚀 The Problem
 
-Marcas de luxo lutam para criar programas de fidelidade que reflitam a exclusividade e o senso de propriedade que seus clientes valorizam. Listas de e-mail e programas de pontos tradicionais são genéricos e não oferecem um ativo digital real que o cliente possa possuir. Falta uma ponte entre a posse de um produto de luxo e a participação em sua comunidade digital.
+Luxury brands struggle to create loyalty programs that reflect the exclusivity and sense of ownership their clients value. Traditional email lists and point-based systems are generic and do not offer a true digital asset that the customer can own. There is a missing bridge between owning a luxury product and participating in its digital community.
 
-## ✨ A Solução: Capys Club na Stellar
+## ✨ The Solution: Capys Club on Stellar
 
-O Capys Club oferece uma solução SaaS que transforma a participação em uma comunidade em uma experiência baseada na posse de ativos digitais. Usando a velocidade e a escalabilidade da **rede Stellar** e seus novos contratos inteligentes **Soroban**, permitimos que marcas emitam **"Cartões de Membro"** e **"Badges de Conquista"** como ativos nativos diretamente para as carteiras de seus clientes, criando um ecossistema de engajamento verificável, eficiente e de baixo custo.
+Capys Club offers a SaaS solution that transforms community participation into an experience based on digital asset ownership. By leveraging the speed and scalability of the **Stellar network** and its new **Soroban** smart contracts, we empower brands to issue **"Membership Cards"** and **"Achievement Badges"** as native assets directly to their clients' wallets. This creates a verifiable, efficient, and low-cost ecosystem for engagement.
 
-## 🛠️ Funcionalidades (Escopo do Hackathon MVP)
+## 🛠️ Features (Hackathon MVP Scope)
 
-Este protótipo foca na jornada de um membro da comunidade de uma marca de iates de luxo.
+This prototype focuses on the user journey of a member within a luxury yacht brand's community.
 
-#### 1. **Acesso Exclusivo via Carteira Stellar (FE-01)**
-   - Conexão direta com a plataforma utilizando carteiras do ecossistema Stellar (Freighter, Albedo, etc.).
-   - A posse de um ativo digital de membro específico é o único requisito para acessar o portal.
+#### 1. **Exclusive Access via Stellar Wallet (FE-01)**
+   - Direct connection to the platform using wallets from the Stellar ecosystem (Freighter, Albedo, etc.).
+   - Ownership of a specific membership asset is the sole requirement to access the portal.
 
-#### 2. **Painel de Controle do Membro VIP (FE-02)**
-   - **Galeria de Ativos:** Uma interface elegante que exibe o ativo principal de membro e uma coleção de badges de conquista, todos emitidos na rede Stellar.
-   - **Conteúdo Token-Gated:** Acesso a seções de conteúdo premium (notícias, eventos) que são desbloqueadas apenas para detentores do ativo de membro.
+#### 2. **The VIP Member Dashboard (FE-02)**
+   - **Asset Gallery:** An elegant interface that displays the main membership asset and a collection of achievement badges, all issued on the Stellar network.
+   - **Token-Gated Content:** Access to premium content sections (news, events) that are unlocked only for holders of the membership asset.
 
-#### 3. **Painel de Gestão da Marca (FE-03)**
-   - **Emissão de Acessos:** Ferramenta para o administrador da marca emitir um novo ativo de membro diretamente para o endereço da carteira Stellar de um cliente VIP.
-   - **Sistema de Premiação:** Capacidade de distribuir badges (ativos digitais) como recompensa por engajamento, fortalecendo a lealdade do cliente.
+#### 3. **The Brand Management Panel (FE-03)**
+   - **Access Issuance:** A tool for the brand administrator to issue a new membership asset directly to a VIP client's Stellar wallet address.
+   - **Rewards System:** The ability to distribute badges (digital assets) as a reward for engagement, thereby strengthening customer loyalty.
 
-## 💻 Stack de Tecnologia
+## 💻 Technology Stack
 
 -   **Frontend:** Next.js (App Router), TypeScript, Tailwind CSS
 -   **Blockchain:** **Stellar Network** (Futurenet/Testnet)
--   **Smart Contracts:** **Soroban** (escritos em **Rust**)
--   **Interação com Blockchain:** **Stellar SDK** / **Soroban SDK**
--   **Conexão de Carteira:** **Freighter API** e/ou **Albedo** para assinatura de transações.
--   **Ativos Digitais:** Ativos nativos da Stellar ou tokens baseados em contratos Soroban.
+-   **Smart Contracts:** **Soroban** (written in **Rust**)
+-   **Blockchain Interaction:** **Stellar SDK** / **Soroban SDK**
+-   **Wallet Connection:** **Freighter API** and/or **Albedo** for transaction signing.
+-   **Digital Assets:** Stellar native assets or tokens managed by Soroban contracts.
 
-## 🚀 Como Rodar Localmente
+## 🚀 Getting Started (Running Locally)
 
-1.  **Clone o repositório:**
+1.  **Clone the repository:**
     ```bash
     git clone [https://github.com/oaxiacpsolrac/frontend-hackmeridian.git](https://github.com/oaxiacpsolrac/frontend-hackmeridian.git)
     cd frontend-hackmeridian
     ```
 
-2.  **Instale as dependências:**
+2.  **Install dependencies:**
     ```bash
     npm install
-    # ou yarn install
+    # or yarn install
     ```
 
-3.  **Configure as variáveis de ambiente:**
-    Crie um arquivo `.env.local` na raiz e adicione as chaves necessárias para a rede Stellar.
+3.  **Set up environment variables:**
+    Create a `.env.local` file in the root directory and add the necessary keys for the Stellar network.
     ```
-    # Exemplo
+    # Example
     NEXT_PUBLIC_SOROBAN_RPC_URL="[https://soroban-testnet.stellar.org:443](https://soroban-testnet.stellar.org:443)"
     NEXT_PUBLIC_CONTRACT_ID="C..."
     NEXT_PUBLIC_NETWORK_PASSPHRASE="Test SDF Network ; September 2015"
     ```
 
-4.  **Inicie o servidor de desenvolvimento:**
+4.  **Start the development server:**
     ```bash
     npm run dev
     ```
 
-5.  Abra [http://localhost:3000](http://localhost:3000) no seu navegador.
+5.  Open [http://localhost:3000](http://localhost:3000) in your browser.
