@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { useWallet } from '@/lib/WalletProvider'
-import { issueMembership, issueBadge, TransactionStatus } from '@/lib/soroban'
+import { issueMembership, issueBadge, awardBadge, TransactionStatus } from '@/lib/soroban'
 import TransactionStatusComponent from '@/components/TransactionStatus'
 
 export default function Admin() {
@@ -78,17 +78,13 @@ export default function Admin() {
     setIsProcessingBadge(true)
     setBadgeStatus({
       status: 'pending',
-      message: 'Processando emissão de badge...'
+      message: 'Processando award de badge...'
     })
 
     try {
-      const result = await issueBadge(
-        badgeForm.walletAddress,
-        badgeForm.badgeId,
-        badgeForm.badgeName || `Badge ${badgeForm.badgeId}`,
-        badgeForm.badgeDescription || `Achievement badge ${badgeForm.badgeId}`,
-        publicKey
-      )
+      // Se o fluxo for apenas "award" (conceder um badge já existente no contrato)
+      // use a função awardBadge. Se quiser continuar com emissão + award, mantenha issueBadge.
+      const result = await awardBadge(badgeForm.walletAddress, badgeForm.badgeId, publicKey)
       setBadgeStatus(result)
       
       if (result.status === 'success') {
@@ -102,7 +98,7 @@ export default function Admin() {
     } catch (error) {
       setBadgeStatus({
         status: 'error',
-        message: 'Erro inesperado ao processar transação',
+        message: 'Erro inesperado ao processar transação de award de badge',
         error: error instanceof Error ? error.message : 'Erro desconhecido'
       })
     } finally {

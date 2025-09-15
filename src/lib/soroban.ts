@@ -150,6 +150,51 @@ export async function issueBadgeTransaction(
 }
 
 /**
+ * Constrói uma transação para conceder (award) um badge existente
+ * @param targetAddress - Endereço da carteira que receberá o badge
+ * @param badgeId - ID do badge a ser concedido
+ * @returns Promise<TransactionBuilder> - Transação construída
+ */
+export async function awardBadgeTransaction(
+  targetAddress: string,
+  badgeId: string
+): Promise<TransactionBuilder> {
+  try {
+    // Configurar servidor
+    const server = new Server(config.rpcUrl)
+
+    // Obter conta do admin
+    const adminAccount = await server.getAccount(targetAddress) // Em produção, usar conta do admin
+
+    // Criar contrato
+    const contract = new Contract(config.contracts.membership)
+
+    // Construir transação
+    const transaction = new TransactionBuilder(adminAccount, {
+      fee: config.baseFee,
+      networkPassphrase: config.networkPassphrase,
+    })
+      .addOperation(
+        Operation.invokeHostFunction({
+          func: contract.call(
+            'award_badge',
+            nativeToScVal(targetAddress, { type: 'address' }),
+            nativeToScVal(badgeId, { type: 'string' })
+          ),
+          auth: []
+        })
+      )
+      .setTimeout(30)
+      .build()
+
+    return transaction
+  } catch (error) {
+    console.error('Erro ao construir transação de award badge:', error)
+    throw new Error('Falha ao construir transação de award badge')
+  }
+}
+
+/**
  * Assina e envia uma transação usando a Freighter
  * @param transaction - Transação a ser assinada
  * @param userAddress - Endereço do usuário que assinará
@@ -274,6 +319,36 @@ export async function issueBadge(
     return {
       status: 'error',
       message: error instanceof Error ? error.message : 'Erro ao emitir badge',
+      error: error instanceof Error ? error.message : 'Erro desconhecido'
+    }
+  }
+}
+
+/**
+ * Concede (award) um badge existente (constrói, assina e envia)
+ * @param targetAddress - Endereço que receberá o badge
+ * @param badgeId - ID do badge
+ * @param adminAddress - Endereço do admin que está concedendo o badge
+ * @returns Promise<TransactionStatus> - Status da operação
+ */
+export async function awardBadge(
+  targetAddress: string,
+  badgeId: string,
+  adminAddress: string
+): Promise<TransactionStatus> {
+  try {
+    // Construir transação
+    const transaction = await awardBadgeTransaction(targetAddress, badgeId)
+
+    // Assinar e enviar
+    const result = await signAndSubmitTransaction(transaction, adminAddress)
+
+    return result
+  } catch (error) {
+    console.error('Erro ao conceder badge:', error)
+    return {
+      status: 'error',
+      message: error instanceof Error ? error.message : 'Erro ao conceder badge',
       error: error instanceof Error ? error.message : 'Erro desconhecido'
     }
   }
