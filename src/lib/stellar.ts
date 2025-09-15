@@ -4,6 +4,25 @@ import { getStellarConfig } from './stellar-config'
 // Obter configurações do Stellar
 const config = getStellarConfig()
 
+// Interfaces para metadados
+export interface NFTMetadata {
+  name: string
+  description: string
+  image: string
+  attributes: Array<{
+    trait_type: string
+    value: string
+  }>
+}
+
+export interface BadgeMetadata {
+  name: string
+  description: string
+  image: string
+  rarity: string
+  category: string
+}
+
 /**
  * Verifica se o usuário possui o NFT de membership
  * @param userAddress - Endereço público da carteira do usuário
@@ -116,5 +135,119 @@ export async function getAccountInfo(userAddress: string) {
   } catch (error) {
     console.error('Erro ao obter informações da conta:', error)
     throw error
+  }
+}
+
+/**
+ * Busca metadados do NFT de membership
+ * @param userAddress - Endereço público da carteira do usuário
+ * @returns Promise<NFTMetadata | null> - Metadados do NFT ou null se não encontrado
+ */
+export async function getMembershipNFTMetadata(userAddress: string): Promise<NFTMetadata | null> {
+  try {
+    // Verificar se possui membership
+    const hasMembership = await checkMembership(userAddress)
+    if (!hasMembership) {
+      return null
+    }
+
+    // Em um cenário real, os metadados seriam armazenados em IPFS ou similar
+    // Por enquanto, retornamos metadados mockados baseados no endereço
+    const mockMetadata: NFTMetadata = {
+      name: `Capys Club Membership #${userAddress.slice(-4)}`,
+      description: "Exclusive membership NFT for Capys Club. Grants access to premium features and exclusive content.",
+      image: `https://api.dicebear.com/7.x/avataaars/svg?seed=${userAddress}&backgroundColor=1f2937&textColor=ffffff`,
+      attributes: [
+        {
+          trait_type: "Tier",
+          value: "VIP"
+        },
+        {
+          trait_type: "Rarity",
+          value: "Legendary"
+        },
+        {
+          trait_type: "Member Since",
+          value: new Date().toLocaleDateString()
+        },
+        {
+          trait_type: "Wallet",
+          value: userAddress.slice(0, 8) + "..." + userAddress.slice(-8)
+        }
+      ]
+    }
+
+    return mockMetadata
+  } catch (error) {
+    console.error('Erro ao buscar metadados do NFT de membership:', error)
+    return null
+  }
+}
+
+/**
+ * Busca metadados de todos os badges que o usuário possui
+ * @param userAddress - Endereço público da carteira do usuário
+ * @returns Promise<BadgeMetadata[]> - Array de metadados dos badges
+ */
+export async function getUserBadgesMetadata(userAddress: string): Promise<BadgeMetadata[]> {
+  try {
+    const badges: BadgeMetadata[] = []
+    
+    // Lista de badges disponíveis para verificar
+    const availableBadges = [
+      { id: 'BADGE1', name: 'First Achievement', description: 'Completed your first task', rarity: 'Common', category: 'Milestone' },
+      { id: 'BADGE2', name: 'Community Helper', description: 'Helped 10 community members', rarity: 'Rare', category: 'Community' },
+      { id: 'BADGE3', name: 'Early Adopter', description: 'Joined in the first week', rarity: 'Epic', category: 'Exclusive' },
+      { id: 'BADGE4', name: 'Content Creator', description: 'Created 5 pieces of content', rarity: 'Rare', category: 'Creative' },
+      { id: 'BADGE5', name: 'Loyal Member', description: 'Active for 30+ days', rarity: 'Epic', category: 'Loyalty' }
+    ]
+
+    // Verificar cada badge
+    for (const badge of availableBadges) {
+      const hasBadge = await checkBadge(userAddress, badge.id)
+      if (hasBadge) {
+        badges.push({
+          name: badge.name,
+          description: badge.description,
+          image: `https://api.dicebear.com/7.x/shapes/svg?seed=${badge.id}&backgroundColor=1f2937&textColor=ffffff`,
+          rarity: badge.rarity,
+          category: badge.category
+        })
+      }
+    }
+
+    return badges
+  } catch (error) {
+    console.error('Erro ao buscar metadados dos badges:', error)
+    return []
+  }
+}
+
+/**
+ * Busca informações completas do usuário (membership + badges)
+ * @param userAddress - Endereço público da carteira do usuário
+ * @returns Promise<object> - Informações completas do usuário
+ */
+export async function getUserProfile(userAddress: string) {
+  try {
+    const [membershipNFT, badges] = await Promise.all([
+      getMembershipNFTMetadata(userAddress),
+      getUserBadgesMetadata(userAddress)
+    ])
+
+    return {
+      hasMembership: !!membershipNFT,
+      membershipNFT,
+      badges,
+      totalBadges: badges.length
+    }
+  } catch (error) {
+    console.error('Erro ao buscar perfil do usuário:', error)
+    return {
+      hasMembership: false,
+      membershipNFT: null,
+      badges: [],
+      totalBadges: 0
+    }
   }
 }
