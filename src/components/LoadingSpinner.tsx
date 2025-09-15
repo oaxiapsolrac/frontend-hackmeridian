@@ -19,3 +19,5 @@ export default function LoadingSpinner({ size = 'md', text }: LoadingSpinnerProp
     </div>
   )
 }
+
+
