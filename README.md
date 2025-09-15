@@ -1,72 +1,66 @@
-# Capys Club - A Tokenized VIP Platform on the Stellar Network
+# Frontend HackMeridian
 
-![Capys Club Banner](https://via.placeholder.com/1200x400.png?text=Capys+Club+-+Powered+by+Stellar)
+Este é um projeto Next.js criado com App Router, TypeScript e Tailwind CSS.
 
-### A high-performance engagement platform that enables luxury brands to create and manage exclusive communities through digital assets on the Stellar blockchain, connecting directly with their most valued clients.
+## 🚀 Tecnologias
 
-[![Status](https://img.shields.io/badge/status-in--development-yellow?style=for-the-badge)](https://github.com/oaxiacpsolrac/frontend-hackmeridian) [![Blockchain](https://img.shields.io/badge/blockchain-Stellar-blueviolet?style=for-the-badge)](https://stellar.org/)
+- **Next.js 14** - Framework React com App Router
+- **TypeScript** - Tipagem estática para JavaScript
+- **Tailwind CSS** - Framework CSS utilitário
+- **ESLint** - Linter para JavaScript/TypeScript
 
----
+## 📁 Estrutura do Projeto
 
-## 🚀 The Problem
+```
+src/
+├── app/                 # App Router (Next.js 13+)
+│   ├── globals.css     # Estilos globais com Tailwind
+│   ├── layout.tsx      # Layout raiz da aplicação
+│   └── page.tsx        # Página inicial
+├── components/         # Componentes reutilizáveis
+│   └── ui/            # Componentes de UI base
+│       └── button.tsx # Componente Button
+└── lib/               # Utilitários e helpers
+    └── utils.ts       # Funções utilitárias
+```
 
-Luxury brands struggle to create loyalty programs that reflect the exclusivity and sense of ownership their clients value. Traditional email lists and point-based systems are generic and do not offer a true digital asset that the customer can own. There is a missing bridge between owning a luxury product and participating in its digital community.
+## 🛠️ Scripts Disponíveis
 
-## ✨ The Solution: Capys Club on Stellar
+```bash
+# Instalar dependências
+npm install
 
-Capys Club offers a SaaS solution that transforms community participation into an experience based on digital asset ownership. By leveraging the speed and scalability of the **Stellar network** and its new **Soroban** smart contracts, we empower brands to issue **"Membership Cards"** and **"Achievement Badges"** as native assets directly to their clients' wallets. This creates a verifiable, efficient, and low-cost ecosystem for engagement.
+# Executar em modo de desenvolvimento
+npm run dev
 
-## 🛠️ Features (Hackathon MVP Scope)
+# Build para produção
+npm run build
 
-This prototype focuses on the user journey of a member within a luxury yacht brand's community.
+# Executar build de produção
+npm start
 
-#### 1. **Exclusive Access via Stellar Wallet (FE-01)**
-   - Direct connection to the platform using wallets from the Stellar ecosystem (Freighter, Albedo, etc.).
-   - Ownership of a specific membership asset is the sole requirement to access the portal.
+# Executar linter
+npm run lint
+```
 
-#### 2. **The VIP Member Dashboard (FE-02)**
-   - **Asset Gallery:** An elegant interface that displays the main membership asset and a collection of achievement badges, all issued on the Stellar network.
-   - **Token-Gated Content:** Access to premium content sections (news, events) that are unlocked only for holders of the membership asset.
+## 🎯 Próximos Passos
 
-#### 3. **The Brand Management Panel (FE-03)**
-   - **Access Issuance:** A tool for the brand administrator to issue a new membership asset directly to a VIP client's Stellar wallet address.
-   - **Rewards System:** The ability to distribute badges (digital assets) as a reward for engagement, thereby strengthening customer loyalty.
+1. Instale as dependências: `npm install`
+2. Execute o projeto: `npm run dev`
+3. Acesse [http://localhost:3000](http://localhost:3000)
 
-## 💻 Technology Stack
+## 📝 Configurações
 
--   **Frontend:** Next.js (App Router), TypeScript, Tailwind CSS
--   **Blockchain:** **Stellar Network** (Futurenet/Testnet)
--   **Smart Contracts:** **Soroban** (written in **Rust**)
--   **Blockchain Interaction:** **Stellar SDK** / **Soroban SDK**
--   **Wallet Connection:** **Freighter API** and/or **Albedo** for transaction signing.
--   **Digital Assets:** Stellar native assets or tokens managed by Soroban contracts.
+- **TypeScript**: Configurado com path mapping (`@/*` para `./src/*`)
+- **Tailwind CSS**: Configurado para escanear arquivos em `src/`
+- **ESLint**: Configurado com regras do Next.js
+- **App Router**: Habilitado para usar a nova arquitetura de roteamento
 
-## 🚀 Getting Started (Running Locally)
+## 🔧 Desenvolvimento
 
-1.  **Clone the repository:**
-    ```bash
-    git clone [https://github.com/oaxiacpsolrac/frontend-hackmeridian.git](https://github.com/oaxiacpsolrac/frontend-hackmeridian.git)
-    cd frontend-hackmeridian
-    ```
-
-2.  **Install dependencies:**
-    ```bash
-    npm install
-    # or yarn install
-    ```
-
-3.  **Set up environment variables:**
-    Create a `.env.local` file in the root directory and add the necessary keys for the Stellar network.
-    ```
-    # Example
-    NEXT_PUBLIC_SOROBAN_RPC_URL="[https://soroban-testnet.stellar.org:443](https://soroban-testnet.stellar.org:443)"
-    NEXT_PUBLIC_CONTRACT_ID="C..."
-    NEXT_PUBLIC_NETWORK_PASSPHRASE="Test SDF Network ; September 2015"
-    ```
-
-4.  **Start the development server:**
-    ```bash
-    npm run dev
-    ```
-
-5.  Open [http://localhost:3000](http://localhost:3000) in your browser.
+O projeto está configurado com:
+- Hot reload automático
+- TypeScript strict mode
+- Tailwind CSS com classes utilitárias
+- Estrutura de pastas organizada
+- Componentes de UI base
