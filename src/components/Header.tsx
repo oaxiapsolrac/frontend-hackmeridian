@@ -3,6 +3,7 @@
 import { Button } from './ui/button'
 import { useWallet } from '@/lib/WalletProvider'
 import ConnectButton from '@/components/ConnectButton'
+import Link from 'next/link'
 
 export default function Header() {
   const { isConnected, publicKey, connect, disconnect, isLoading } = useWallet()
@@ -24,6 +25,11 @@ export default function Header() {
 
         {/* Wallet Connection */}
         <div className="flex items-center space-x-4">
+          <nav>
+            <Link href="/(vip)/dashboard" className="text-sm text-white/90 hover:text-white transition">
+              Dashboard
+            </Link>
+          </nav>
           {isConnected && publicKey ? (
             <div className="flex items-center space-x-3">
               <div className="text-sm text-gray-300">
